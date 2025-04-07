@@ -13,7 +13,7 @@ type ImageTrim struct {
 	images []*image.Image
 }
 
-func InitImageTrim(images []*image.Image) *ImageTrim {
+func NewImageTrim(images []*image.Image) *ImageTrim {
 	i := new(ImageTrim)
 	i.images = images
 

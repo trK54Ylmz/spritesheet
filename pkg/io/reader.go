@@ -1,4 +1,4 @@
-package folder
+package io
 
 import (
 	"log"
@@ -12,13 +12,15 @@ type FileReader struct {
 	path *string
 }
 
-func InitFileReader(path *string) *FileReader {
+// NewFileReader creates a file reader for a path
+func NewFileReader(path *string) *FileReader {
 	f := new(FileReader)
 	f.path = path
 
 	return f
 }
 
+// ListDir for a path
 func (f *FileReader) ListDir() ([]string, error) {
 	if _, err := os.Stat(*f.path); err != nil {
 		if os.IsNotExist(err) {
@@ -54,6 +56,7 @@ func (f *FileReader) ListDir() ([]string, error) {
 	return files, nil
 }
 
+// Read content of the given png file
 func (f *FileReader) Read(path string) (*os.File, error) {
 	file, err := os.Open(path)
 	if err != nil {

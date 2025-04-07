@@ -3,13 +3,13 @@ package main
 import (
 	"image"
 
-	"github.com/trk54ylmz/spritesheet/pkg/folder"
+	"github.com/trk54ylmz/spritesheet/pkg/io"
 	"github.com/trk54ylmz/spritesheet/pkg/picture"
 )
 
 // Process the input images and generate the output image
 func Process(input, output *string) error {
-	fr := folder.InitFileReader(input)
+	fr := io.NewFileReader(input)
 
 	entries, err := fr.ListDir()
 	if err != nil {
@@ -25,7 +25,7 @@ func Process(input, output *string) error {
 
 		defer f.Close()
 
-		ir := picture.InitImageReader(f)
+		ir := picture.NewImageReader(f)
 
 		image, err := ir.Read()
 		if err != nil {
@@ -35,7 +35,7 @@ func Process(input, output *string) error {
 		images[index] = image
 	}
 
-	it := picture.InitImageTrim(images)
+	it := picture.NewImageTrim(images)
 
 	trimmed, width, height, err := it.Trim()
 	if err != nil {
