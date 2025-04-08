@@ -159,11 +159,10 @@ func (i *ImageTrim) Trim() ([]*image.Image, *int, *int, error) {
 		if lb > b {
 			b = lb
 		}
-
 	}
 
-	nw := point.X - l - (point.X - r)
-	nh := point.Y - t - (point.Y - b)
+	nw := point.X - l - (point.X - r - 1)
+	nh := point.Y - t - (point.Y - b - 1)
 	np := image.Rectangle{image.Point{0, 0}, image.Point{nw, nh}}
 
 	log.Printf("The trimmed file size is %dx%d px\n", nw, nh)
