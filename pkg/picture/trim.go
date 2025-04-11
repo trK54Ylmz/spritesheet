@@ -5,8 +5,6 @@ import (
 	"image/color"
 	"log"
 	"math"
-
-	"github.com/trk54ylmz/spritesheet/pkg/util"
 )
 
 type ImageTrim struct {
@@ -30,29 +28,6 @@ func (i *ImageTrim) rgba(image *image.Image, x, y int) *color.RGBA {
 	r, g, b, a := (*image).At(x, y).RGBA()
 
 	return &color.RGBA{uint8(r >> 8), uint8(g >> 8), uint8(b >> 8), uint8(a >> 8)}
-}
-
-func (i *ImageTrim) CheckSize() bool {
-	w, h := 0, 0
-
-	for index := range i.images {
-		point := i.size(i.images[index])
-
-		if index == 0 {
-			w = point.X
-			h = point.Y
-		} else {
-			if w != point.X {
-				return false
-			}
-
-			if h != point.Y {
-				return false
-			}
-		}
-	}
-
-	return true
 }
 
 func (i *ImageTrim) OptimalSize(image *image.Image) (int, int, int, int) {
@@ -132,13 +107,6 @@ func (i *ImageTrim) OptimalSize(image *image.Image) (int, int, int, int) {
 }
 
 func (i *ImageTrim) Trim() ([]*image.Image, *int, *int, error) {
-	log.Println("Checking file sizes ...")
-
-	identical := i.CheckSize()
-	if !identical {
-		return nil, nil, nil, util.ErrSizeNotIdentical
-	}
-
 	// Get size of the pictures
 	point := i.size(i.images[0])
 

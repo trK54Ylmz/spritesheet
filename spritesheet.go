@@ -2,13 +2,15 @@ package main
 
 import (
 	"image"
+	"log"
 
 	"github.com/trk54ylmz/spritesheet/pkg/io"
 	"github.com/trk54ylmz/spritesheet/pkg/picture"
+	"github.com/trk54ylmz/spritesheet/util"
 )
 
 // Process the input images and generate the output image
-func Process(input, output *string) error {
+func Process(input, output *string, trim *bool) error {
 	fr := io.NewFileReader(input)
 
 	entries, err := fr.ListDir()
@@ -32,20 +34,38 @@ func Process(input, output *string) error {
 			return err
 		}
 
+		defer ir.Close()
+
 		images[index] = image
 	}
 
-	it := picture.NewImageTrim(images)
+	log.Println("Checking file sizes ...")
 
-	trimmed, width, height, err := it.Trim()
-	if err != nil {
-		return err
+	identical := util.CheckSizes(images)
+	if !identical {
+		return util.ErrSizeNotIdentical
 	}
 
-	iw := picture.NewImageWriter(*width, *height, len(trimmed))
+	var width *int
+	var height *int
+	if *trim {
+		it := picture.NewImageTrim(images)
 
-	for index := range trimmed {
-		iw.Append(index, trimmed[index])
+		images, width, height, err = it.Trim()
+		if err != nil {
+			return err
+		}
+	} else {
+		size := (*images[0]).Bounds().Size()
+
+		width = &size.X
+		height = &size.Y
+	}
+
+	iw := io.NewImageWriter(*width, *height, len(images))
+
+	for index := range images {
+		iw.Append(index, images[index])
 	}
 
 	return iw.Write(*output)

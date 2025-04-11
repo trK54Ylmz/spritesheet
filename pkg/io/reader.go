@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/trk54ylmz/spritesheet/pkg/util"
+	"github.com/trk54ylmz/spritesheet/util"
 )
 
 type FileReader struct {

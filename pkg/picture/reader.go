@@ -28,3 +28,12 @@ func (i *ImageReader) Read() (*image.Image, error) {
 
 	return &img, nil
 }
+
+// Close the active file
+func (i *ImageReader) Close() {
+	if i.file == nil {
+		return
+	}
+
+	i.file.Close()
+}
